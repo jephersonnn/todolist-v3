@@ -38,7 +38,15 @@ app.listen(port, function() {
 })
 
 app.post("/", function(req, res) {
-  mainItems.push(req.body.itemTextField);
+  if (req.body.list === "Work") { //on the <input> element found on list.ejs, there's an attribute that actually holds the data of listTitle. it uses that field to control where the new item should be pushed
+    workItems.push(req.body.itemTextField);
+    res.redirect("/work"); //redirect to the work page
+  } else {
+    mainItems.push(req.body.itemTextField);
+    res.redirect("/")
+  }
+
+  console.log(req.body);
   res.redirect("/");
 })
 
@@ -49,7 +57,3 @@ app.get("/work", function(req, res) {
   });
 
 });
-
-app.post("/work", function(req, res) {
-  workItems.push(req.body.itemTextField);
-})
