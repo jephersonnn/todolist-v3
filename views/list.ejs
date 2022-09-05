@@ -4,25 +4,29 @@
 <head>
   <meta charset="utf-8">
   <title>To-do List</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body>
+  <div class="box" id="heading">
+    <h1><%= listTitle %>!</h1>
+  </div>
 
-  <h1 style="color: blue">It's <%= dayOfWeek %>!</h1>
+  <div class="box">
+    <%  for (var i=0; i < newTodoItems.length; i++) { %>
+    <div class="item">
+      <input type="checkbox" />
+      <p> <%= newTodoItems[i] %> </p>
+    </div>
+    <% } %>
+
+    <form class="item" action="/" method="POST">
+      <input id="itemTextField" type="text" name=itemTextField placeholder="New To-do Item" autocomplete="off"/>
+      <button type="submit" name="submit">+</button>
+  </div>
 
 
-  <form action="/" method="POST">
-    <label for="itemTextField">Insert something here</label>
-    <input id="itemTextField" type="text" name=itemTextField />
-    <button type="submit" name="submit">Submit</button>
   </form>
-
-  <ul>
-   <%  for (var i=0; i < newTodoItems.length; i++) { %>
-          <li> <%= newTodoItems[i] %> </li>
-   <% } %>
-
-  </ul>
 
   <!-- the EJS marker contains an EJS variable. It may contain values or objects sent from the server %> %> %> -->
 </body>

@@ -6,28 +6,50 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 
-var newItems = [];
+let mainItems = [];
+let workItems = [];
 
-app.use(bodyParser.urlencoded({extended:true})); //Do not forget this when you want to retrieve data from the webpage to the server
-
+app.use(bodyParser.urlencoded({
+  extended: true
+})); //Do not forget this when you want to retrieve data from the webpage to the server
+app.use(express.static("public"));
 app.set('set engine', 'ejs'); //this tells Express to use EJS as a new view engine
 
-app.get("/", function (req, res){
+app.get("/", function(req, res) {
 
-  var today = new Date();
+  let today = new Date();
 
-var options = { weekday: "long", day: "numeric", month: "long"}
+  let options = {
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  }
 
-var day = today.toLocaleDateString("en-US", options)
+  let day = today.toLocaleDateString("en-US", options)
 
-res.render("list.ejs", {dayOfWeek:day, newTodoItems: newItems})
+  res.render("list.ejs", {
+    listTitle: day,
+    newTodoItems: mainItems
+  })
 })
 
-app.listen(port, function(){
-  console.log("Server started on port "+ port);
+app.listen(port, function() {
+  console.log("Server started on port " + port);
 })
 
-app.post("/", function(req, res){
-  newItems.push(req.body.itemTextField);
+app.post("/", function(req, res) {
+  mainItems.push(req.body.itemTextField);
   res.redirect("/");
+})
+
+app.get("/work", function(req, res) {
+  res.render("list.ejs", {
+    listTitle: "Work List",
+    newTodoItems: workItems
+  });
+
+});
+
+app.post("/work", function(req, res) {
+  workItems.push(req.body.itemTextField);
 })
