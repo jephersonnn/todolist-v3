@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-
-<head>
-  <meta charset="utf-8">
-  <title>To-do List</title>
-  <link rel="stylesheet" href="css/styles.css" />
-</head>
+<%- include("header") -%>
+<!-- //include("file.ejs") is a EJS layout -->
 
 <body>
+  <a href="/about">About Page</a>
+  <!-- route to about.ejs page. see server file to see how it handles the routing -->
   <div class="box" id="heading">
     <h1><%= listTitle %>!</h1>
   </div>
@@ -30,5 +26,4 @@
 
   <!-- the EJS marker contains an EJS variable. It may contain values or objects sent from the server %> %> %> -->
 </body>
-
-</html>
+<%- include("footer") -%>
