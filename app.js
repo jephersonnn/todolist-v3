@@ -1,7 +1,8 @@
-//jshint esversion:]6
+//jshint esversion:6
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const date = require(__dirname + "/date.js"); //importing local node module
 
 const app = express();
 const port = 3000;
@@ -17,15 +18,7 @@ app.set('set engine', '.ejs'); //this tells Express to use EJS as a new view eng
 
 app.get("/", function(req, res) {
 
-  let today = new Date();
-
-  let options = {
-    weekday: "long",
-    day: "numeric",
-    month: "long"
-  }
-
-  let day = today.toLocaleDateString("en-US", options)
+  let day = date.getDate();
 
   res.render("list.ejs", {
     listTitle: day,
@@ -40,7 +33,7 @@ app.listen(port, function() {
 app.get("/about", function (req,res){
   res.render("about.ejs"); //render about.ejs
 })
-//any element href with the same .get parameter can trigger this. shall that element be clicked, .get block will be triggered, this rendering the about.ejs file 
+//any element href with the same .get parameter can trigger this. shall that element be clicked, .get block will be triggered, this rendering the about.ejs file
 
 app.post("/", function(req, res) {
   if (req.body.list === "Work") { //on the <input> element found on list.ejs, there's an attribute that actually holds the data of listTitle. it uses that field to control where the new item should be pushed
