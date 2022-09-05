@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>To-do List</title>
-  </head>
-  <body>
 
-    <% if (dayOfWeek === "Saturday " || dayOfWeek === "Sunday") { %>
-           <h1 style="color: blue">It's <%= dayOfWeek %>! Issa  <%= kindOfDay %>!</h1>
-    <% } else { %>
-         <h1 style="color: orange">It's <%= dayOfWeek %>! Issa  <%= kindOfDay %>!</h1>
-    <% } %>
+<head>
+  <meta charset="utf-8">
+  <title>To-do List</title>
+</head>
+
+<body>
+
+  <h1 style="color: blue">It's <%= dayOfWeek %>!</h1>
 
 
-      <!-- the EJS marker contains an EJS variable. It may contain values or objects sent from the server %> %> %> -->
-  </body>
+  <form action="/" method="POST">
+    <label for="itemTextField">Insert something here</label>
+    <input id="itemTextField" type="text" name=itemTextField />
+    <button type="submit" name="submit">Submit</button>
+  </form>
+
+  <ul>
+   <%  for (var i=0; i < newTodoItems.length; i++) { %>
+          <li> <%= newTodoItems[i] %> </li>
+   <% } %>
+
+  </ul>
+
+  <!-- the EJS marker contains an EJS variable. It may contain values or objects sent from the server %> %> %> -->
+</body>
+
 </html>

@@ -6,25 +6,28 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 
+var newItems = [];
+
+app.use(bodyParser.urlencoded({extended:true})); //Do not forget this when you want to retrieve data from the webpage to the server
+
 app.set('set engine', 'ejs'); //this tells Express to use EJS as a new view engine
 
 app.get("/", function (req, res){
 
   var today = new Date();
-  var currentDay = today.getDay();
-  var day = "";
-  const dayArray = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 
-  if (today.getDay() === 6  || today.getDay() === 0 ) //getDay returns the day of the week. 0 is for Sunday, 6 for Saturday
-    day = "Weekend";
-  else
-    day = "Weekday";
-    //.write is better than .send because the client will stop receiving responses after the first .send
+var options = { weekday: "long", day: "numeric", month: "long"}
 
-  res.render('list.ejs', {dayOfWeek: dayArray[currentDay], kindOfDay: day }); //a function from EJS. this expects filename.EJS from folder 'views'
-  // we are passing the variable 'day' to the EJS variable dayOfWeek on list.ejs
+var day = today.toLocaleDateString("en-US", options)
+
+res.render("list.ejs", {dayOfWeek:day, newTodoItems: newItems})
 })
 
 app.listen(port, function(){
   console.log("Server started on port "+ port);
+})
+
+app.post("/", function(req, res){
+  newItems.push(req.body.itemTextField);
+  res.redirect("/");
 })
