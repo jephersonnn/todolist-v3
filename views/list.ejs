@@ -2,22 +2,27 @@
 <!-- //include("file.ejs") is a EJS layout -->
 
 <body>
-  <a href="/about">About Page</a>
+  <!-- <a href="/about">About Page</a> -->
   <!-- route to about.ejs page. see server file to see how it handles the routing -->
   <div class="box" id="heading">
-    <h1><%= listTitle %>!</h1>
+    <h1><%= listTitle %></h1>
   </div>
 
   <div class="box">
     <%  newTodoItems.forEach (function(item){  %>
-    <div class="item">
-      <input type="checkbox" />
-      <p> <%= item.name %> </p>
-    </div>
+    <form action="/delete" method="POST">
+      <div class="item">
+        <input type="checkbox" name="checkbox" value="<%=item._id%>" onChange="this.form.submit()"/>
+        <!-- if a checkbox is checked, then onChange will be triggered -->
+        <p> <%= item.name %> </p>
+      </div>
+      <input type="hidden" name="list" value=<%= listTitle %>>
+    </form>
+
     <% }) %>
 
     <form class="item" action="/" method="POST">
-      <input id="itemTextField" type="text" name=itemTextField placeholder="New To-do Item" autocomplete="off"/>
+      <input id="itemTextField" type="text" name=itemTextField placeholder="New To-do Item" autocomplete="off" />
       <button type="submit" name="list" value=<%= listTitle %>>+</button>
   </div>
 

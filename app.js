@@ -5,12 +5,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose"); //mongoose node module import
 const date = require(__dirname + "/date.js"); //importing local node module
+const _ = require("lodash");
 
 const app = express();
 const port = 3000;
 
-let mainItems = []; //to do list array for default view
-let workItems = []; //to do list array for work view
+let day = "Today";
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -27,7 +27,22 @@ const itemSchema = { //Schema
   }
 };
 
+const listSchema = { //Schema
+  name: String,
+  items: [itemSchema]
+};
+
+const archiveItemSchema = { //Schema
+  name: {
+    type: String,
+    required: true
+  }
+};
+
+const List = mongoose.model("List", listSchema);
 const Item = mongoose.model("Item", itemSchema); //Making a model out of the schema
+const ArchiveItem = mongoose.model("Archive", archiveItemSchema);
+
 
 const itemA = new Item({
   name: "This is your todo list!"
@@ -41,14 +56,16 @@ const itemC = new Item({
   name: "<-- Cross out items by using the checkbox"
 })
 
+const starterItems = [itemA, itemB, itemC];
+
 app.get("/", function(req, res) {
 
-  let day = date.getDate();
+  //let day = date.getDate();
 
   Item.find({}, function(err, foundItems) {
 
-    if (foundItems.length === 0) {
-      Item.insertMany([itemA, itemB, itemC], function(err) {
+    if (foundItems.length === 0) { //if to-do db is empty, add the default items
+      Item.insertMany(starterItems, function(err) {
         if (err)
           console.log("Oops something went wrong!");
         else
@@ -73,20 +90,75 @@ app.get("/about", function(req, res) {
 })
 //any element href with the same .get parameter can trigger this. shall that element be clicked, .get block will be triggered, this rendering the about.ejs file
 
+//-----------------------------------
+//Insert new item
 app.post("/", function(req, res) {
   const newItem = new Item({
     name: req.body.itemTextField
   })
 
-  newItem.save();
-  res.redirect("/") //redirect to main page
+  //req.body.list retrieves the value from the button named "List" where the value assigned to that element is "listTitle"
+  if (req.body.list === day) {
+    newItem.save();
+    res.redirect("/");
+  } else {
+    List.findOne({
+      name: req.body.list
+    }, function(err, foundList) {
+      foundList.items.push(newItem);
+      foundList.save();
+      res.redirect("/" + req.body.list);
+    })
+  }
+})
+
+//-----------------------------------
+//Delete checked item
+app.post("/delete", function(req, res) {
+
+  if (req.body.list === day) {
+    //Model.findByIdAndRemove(ID, function-callback)
+    Item.findByIdAndRemove(req.body.checkbox, function(err) {
+      if (!err) {
+        console.log("Item successfully deleted.")
+        res.redirect("/");
+      }
+    });
+  }
+  else{
+    //Model.findOneAndUpdate({filter/conditions}, {updates}, function-callback)
+    List.findOneAndUpdate({name: req.body.list}, {$pull: {items: {_id: req.body.checkbox}}}, function(err, foundList){
+      if (!err){
+        res.redirect("/" + req.body.list);
+      }
+    })
+  }
 
 })
 
-app.get("/work", function(req, res) { //To give access to /Work
-  res.render("list.ejs", {
-    listTitle: "Work List",
-    newTodoItems: workItems
-  });
+//-----------------------------------
+//Generate Custom List Item
+app.get("/:customListName", function(req, res) { //express route params
+  const customListName = _.capitalize(req.params.customListName);
 
+  List.findOne({
+    name: customListName
+  }, function(err, foundList) {
+    if (!err) {
+      if (!foundList) {
+        const list = new List({
+          name: customListName,
+          items: starterItems
+        })
+
+        list.save();
+        res.redirect("/" + customListName);
+      } else {
+        res.render("list.ejs", {
+          listTitle: foundList.name,
+          newTodoItems: foundList.items
+        })
+      }
+    }
+  })
 });
