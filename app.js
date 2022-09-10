@@ -13,7 +13,7 @@ if (port == null || port == ""){
   port = 3000;
 }
 
-let day = "Today";
+let day = date.getDate();
 
 app.use(bodyParser.urlencoded({
   extended: true

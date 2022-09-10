@@ -1,13 +1,13 @@
 html {
-  background-color: #E4E9FD;
-  background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
+  background-color: #222831;
   min-height: 1000px;
   font-family: 'helvetica neue';
 }
 
 h1 {
-  color: #fff;
+  color: black;
   padding: 10px;
+  font-size: 25px;
 }
 
 .box {
@@ -19,7 +19,7 @@ h1 {
 }
 
 #heading {
-  background-color: #A683E3;
+  background-color: #white;
   text-align: center;
 }
 
@@ -61,7 +61,7 @@ button {
   width: 50px;
   border-radius: 50%;
   border-color: transparent;
-  background-color: #A683E3;
+  background-color: #222831;
   color: #fff;
   font-size: 30px;
   padding-bottom: 6px;
@@ -91,6 +91,5 @@ input[type="text"]:focus {
 
 footer {
   color: white;
-  color: rgba(0, 0, 0, 0.5);
   text-align: center;
 }
