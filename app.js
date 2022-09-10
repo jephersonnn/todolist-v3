@@ -9,7 +9,7 @@ const _ = require("lodash");
 
 const app = express();
 let port = process.env.PORT;
-if (port == null || por ""){
+if (port == null || port == ""){
   port = 3000;
 }
 
