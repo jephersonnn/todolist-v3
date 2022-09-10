@@ -27,7 +27,7 @@ mongoose.connect("mongodb+srv://jephersonn:test0021@cluster0.eyprdpp.mongodb.net
 
 //Schema for the default List
 const itemSchema = { //Schema
-  name: String;
+  name: String,
 };
 
 //Schema for the custom Lists
@@ -38,7 +38,7 @@ const listSchema = { //Schema
 
 const archiveItemSchema = { //Schema
   name: {
-    type: String;
+    type: String,
   }
 };
 
