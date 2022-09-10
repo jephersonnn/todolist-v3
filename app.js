@@ -18,8 +18,10 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 app.set('set engine', '.ejs'); //this tells Express to use EJS as a new view engine
 
-mongoose.connect("mongodb://localhost:27017/todolistDB");
+mongoose.connect("mongodb+srv://jephersonn:test0021@cluster0.eyprdpp.mongodb.net/todolistDB");
 
+
+//Schema for the default List
 const itemSchema = { //Schema
   name: {
     type: String,
@@ -27,6 +29,7 @@ const itemSchema = { //Schema
   }
 };
 
+//Schema for the custom Lists
 const listSchema = { //Schema
   name: String,
   items: [itemSchema]
@@ -85,6 +88,7 @@ app.listen(port, function() {
   console.log("Server started on port " + port);
 })
 
+//
 app.get("/about", function(req, res) {
   res.render("about.ejs"); //render about.ejs
 })
@@ -103,6 +107,9 @@ app.post("/", function(req, res) {
     res.redirect("/");
   } else {
     List.findOne({
+      //On the list database, mongoDB will find a document with the matching field (in this case, the List)
+      //It will try to grab a matching document, and the found document will then be passed as a parameter for the callback function
+      //Which will then be used inside the callback function
       name: req.body.list
     }, function(err, foundList) {
       foundList.items.push(newItem);
@@ -127,8 +134,11 @@ app.post("/delete", function(req, res) {
   }
   else{
     //Model.findOneAndUpdate({filter/conditions}, {updates}, function-callback)
+    //Model.findOneAndUpdate({field: query}, {$pull: {}})
+    //$pull is a mongoDB command that pulls a document or a nested document out of the database, thus deleting it.
     List.findOneAndUpdate({name: req.body.list}, {$pull: {items: {_id: req.body.checkbox}}}, function(err, foundList){
       if (!err){
+          console.log("Item successfully deleted.")
         res.redirect("/" + req.body.list);
       }
     })
@@ -146,6 +156,7 @@ app.get("/:customListName", function(req, res) { //express route params
   }, function(err, foundList) {
     if (!err) {
       if (!foundList) {
+
         const list = new List({
           name: customListName,
           items: starterItems
