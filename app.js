@@ -6,11 +6,12 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose"); //mongoose node module import
 const date = require(__dirname + "/date.js"); //importing local node module
 const _ = require("lodash");
+require('dotenv').config();
 
 const app = express();
 let port = process.env.PORT;
 if (port == null || port == ""){
-  port = 3000;
+  port = 3008;
 }
 
 //let day = date.getDate();
@@ -22,7 +23,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 app.set('set engine', '.ejs'); //this tells Express to use EJS as a new view engine
 
-mongoose.connect("mongodb+srv://jephersonn:test0021@cluster0.eyprdpp.mongodb.net/todolistDB");
+mongoose.connect(process.env.MONGOOSE_ENDPOINT);
 
 
 //Schema for the default List
