@@ -6,21 +6,23 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose"); //mongoose node module import
 const date = require(__dirname + "/date.js"); //importing local node module
 const _ = require("lodash");
+var path = require('path')
 require('dotenv').config();
 
 const app = express();
 let port = process.env.PORT;
 if (port == null || port == ""){
-  port = 3008;
+  port = 8080;
 }
 
-//let day = date.getDate();
-let day = "To-Do";
+//let title = date.getDate();
+let title = "To-Do";
 
 app.use(bodyParser.urlencoded({
   extended: true
 })); //Do not forget this when you want to retrieve data from the webpage to the server
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
+app.set('views', path.join(__dirname, 'views'));
 app.set('set engine', '.ejs'); //this tells Express to use EJS as a new view engine
 
 mongoose.connect(process.env.MONGOOSE_ENDPOINT);
@@ -64,7 +66,7 @@ const starterItems = [itemA, itemB, itemC];
 
 app.get("/", function(req, res) {
 
-  //let day = date.getDate();
+  //let title = date.getDate();
 
   Item.find({}, function(err, foundItems) {
 
@@ -78,7 +80,7 @@ app.get("/", function(req, res) {
       res.redirect("/");
     } else {
       res.render("list.ejs", {
-        listTitle: day,
+        listTitle: title,
         newTodoItems: foundItems
       })
     }
@@ -103,7 +105,7 @@ app.post("/", function(req, res) {
   })
 
   //req.body.list retrieves the value from the button named "List" where the value assigned to that element is "listTitle"
-  if (req.body.list === day) {
+  if (req.body.list === title) {
     newItem.save();
     res.redirect("/");
   } else {
@@ -124,7 +126,7 @@ app.post("/", function(req, res) {
 //Delete checked item
 app.post("/delete", function(req, res) {
 
-  if (req.body.list === day) {
+  if (req.body.list === title) {
     //Model.findByIdAndRemove(ID, function-callback)
     Item.findByIdAndRemove(req.body.checkbox, function(err) {
       if (!err) {
